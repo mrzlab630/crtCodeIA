@@ -1,0 +1,62 @@
+<idea-plugin>
+    <id>com.mrzlab630.creatCodeIA.creatCodeIA</id>
+    <name>CreatCodeIA</name>
+    <vendor email="mrzt@mrzlab630.pw" url="https://mrzlab630.pw">mrZLab630pw</vendor>
+
+    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
+         Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
+    <description><![CDATA[
+To get started, simply type "//crtCodeIA {%Your question%}"<br/>
+Then, go to "Tools," click on "crtCodeIA," and select "crtCodeIA."<br/>
+Alternatively, you can use the shortcut "control+shift+Q+C" for a quick access.
+<br/><br/>
+Don't forget to add your API key before you proceed.<br/>
+To do this, go to "Tools," click on "crtCodeIA," and select "CrtCodeIASettings."<br/>
+You can also use the shortcut "control+shift+Q+S."<br/>
+<b>Have fun!</b>
+]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.xml</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <notificationGroup id="mrzlab630.creatCodeIA.notification"
+                           displayType="BALLOON"
+                           key="notification.group.name"/>
+
+        <applicationService serviceImplementation="CrtCodeIASettingsState"/>
+
+    </extensions>
+
+    <actions>
+        <group
+                id="CrtCodeIAMenu"
+                text="CrtCodeIA"
+                description="get text from chatGPT"
+                popup="true"
+        >
+
+            <action id="CrtCodeIA" class="CrtCodeIA" text="Run CrtCodeIA" >
+                <keyboard-shortcut
+                        keymap="$default"
+                        first-keystroke="control shift Q"
+                        second-keystroke="C"/>
+            </action>
+
+            <separator/>
+
+            <action id="CrtCodeIASettings" class="CrtCodeIASettings" text="CrtCodeIA Settings" >
+                <keyboard-shortcut
+                        keymap="$default"
+                        first-keystroke="control shift Q"
+                        second-keystroke="S"/>
+            </action>
+
+            <add-to-group group-id="ToolsMenu" anchor="first" />
+        </group>
+
+    </actions>
+
+</idea-plugin>
