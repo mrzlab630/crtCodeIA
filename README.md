@@ -12,6 +12,8 @@ Don't forget to add your API key before you proceed. To do this, go to "Tools," 
 ###  Have fun!
 
 
+### the plugin is ready for use in the "plugin" folder.
+
 ## installation
 
 File --> Settings --> Plugins --> click on the gear --> install Plugin from the Disc --> select the file creatCodeIA-1.0.jar
