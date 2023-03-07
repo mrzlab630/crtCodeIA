@@ -21,7 +21,7 @@ You can also use the shortcut "control+shift+Q+S."
 ###  Have fun!
 
 
-### the plugin is ready for use in the "plugin" folder.
+### the plugin ready to use in the "plugin" folder.
 
 ## installation
 
