@@ -7,14 +7,27 @@
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-To get started, simply type "//crtCodeIA {%Your question%}"<br/>
+To get started, simply type:<br/>
+<p>
+"<b>//crtCodeIA {%Your question%}</b>"<br/>
+or<br/>
+<b>
+/**<br/>
+    //crtCodeIA<br/>
+    {%Your question%}<br/>
+ */<br/>
+ </b>
+</p>
+<p>
 Then, go to "Tools," click on "crtCodeIA," and select "crtCodeIA."<br/>
 Alternatively, you can use the shortcut "control+shift+Q+C" for a quick access.
-<br/><br/>
+</p>
+<p>
 Don't forget to add your API key before you proceed.<br/>
 To do this, go to "Tools," click on "crtCodeIA," and select "CrtCodeIASettings."<br/>
 You can also use the shortcut "control+shift+Q+S."<br/>
 <b>Have fun!</b>
+</p>
 ]]></description>
 
     <depends>com.intellij.modules.platform</depends>

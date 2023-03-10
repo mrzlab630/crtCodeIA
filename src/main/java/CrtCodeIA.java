@@ -20,6 +20,9 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import com.google.gson.JsonArray;
 import org.apache.http.util.EntityUtils;
+import org.apache.commons.lang.StringUtils;
+
+
 
 
 public class CrtCodeIA extends AnAction {
@@ -28,12 +31,22 @@ public class CrtCodeIA extends AnAction {
     Document document;
     String documentText;
     String targetPrefix;
+
+    String notificationId;
+    String notificationTitle;
     public CrtCodeIA() {
         super("CrtCodeIA");
         state = CrtCodeIASettingsState.getInstance();
         targetPrefix = "//crtCodeIA";
+        notificationId = "mrzlab630.creatCodeIA.notification";
+        notificationTitle = "CrtCodeIA";
     }
 
+    /*
+    //crtCodeIA
+
+    some text
+    */
     @Override
     public void actionPerformed(AnActionEvent e) {
 
@@ -42,27 +55,17 @@ public class CrtCodeIA extends AnAction {
         String model = state.getModel();
         String role = state.getRole();
 
-        String textToCopy = "";
-
-
         final Project project = e.getProject();
         final Editor editor = e.getData(CommonDataKeys.EDITOR);
 
         final CaretModel caretModel = editor.getCaretModel();
         Document document = editor.getDocument();
-        int caretOffset = caretModel.getOffset() + 1;
+        int caretOffset = caretModel.getOffset() + 2;
         documentText = document.getText();
-        int index = documentText.indexOf(targetPrefix);
-        if (index != -1) {
-            int lineStart = documentText.lastIndexOf('\n', index) + 1;
-            int lineEnd = documentText.indexOf('\n', index);
-            if (lineEnd == -1) {
-                lineEnd = documentText.length();
-            }
-            textToCopy = documentText.substring(lineStart, lineEnd);
-        }
 
-        final String content = textToCopy.replaceFirst(targetPrefix, "");
+        String multiLine = getMultiLineComment( documentText, targetPrefix);
+        String oneLine = getStringComment( documentText,  targetPrefix);
+        final String content = multiLine != null && !multiLine.isEmpty() ? multiLine : oneLine;
 
         if(content.length() == 0){
             notification(
@@ -75,7 +78,30 @@ public class CrtCodeIA extends AnAction {
 
         String requestParams = requestParams(role,content,model);
 
-        Thread requestThread = new Thread(() -> {
+        requestThread(
+                caretOffset,
+                notificationId,
+                notificationTitle,
+                token,
+                url,
+                requestParams,
+                project,
+                document
+        ).start();
+    }
+
+    public Thread requestThread(
+                                int caretOffset,
+                                String notificationId,
+                                String notificationTitle,
+                                String token,
+                                String url,
+                                String requestParams,
+                                Project project,
+                                Document document
+    ){
+        return new Thread(() -> {
+
             try {
                 if(token == null || token.length() == 0){
                     throw new IllegalArgumentException("token is empty");
@@ -83,8 +109,8 @@ public class CrtCodeIA extends AnAction {
                 WriteCommandAction.runWriteCommandAction(project, () -> document.setText(documentText.replace(targetPrefix, targetPrefix+":Waiting...")));
 
                 notification(
-                        "mrzlab630.creatCodeIA.notification",
-                        "CrtCodeIA",
+                        notificationId,
+                        notificationTitle,
                         "Waiting..."
                 ).notify(project);
 
@@ -92,13 +118,13 @@ public class CrtCodeIA extends AnAction {
 
 
                 WriteCommandAction.runWriteCommandAction(project, () -> {
-                            document.setText(documentText.replace(targetPrefix, targetPrefix + ":DONE"));
-                            document.insertString(caretOffset, "\n/**\n" + codeIA + "\n*/");
-                        });
+                    document.setText(documentText.replace(targetPrefix, targetPrefix + ":DONE"));
+                    document.insertString(caretOffset, "\n/**\n" + codeIA + "\n*/");
+                });
 
                 notification(
-                        "mrzlab630.creatCodeIA.notification",
-                        "CrtCodeIA",
+                        notificationId,
+                        notificationTitle,
                         "Done"
                 ).notify(project);
 
@@ -111,18 +137,53 @@ public class CrtCodeIA extends AnAction {
                 });
 
 
-               notification(
-                        "mrzlab630.creatCodeIA.notification",
-                        "CrtCodeIA",
+                notification(
+                        notificationId,
+                        notificationTitle,
                         errorMessage
                 ).notify(project);
 
             }
         });
-
-        requestThread.start();
+    }
+    public String getMultiLineComment(String documentText, String targetPrefix){
+        String[] lines = StringUtils.split(documentText, "\n");
+        boolean inComment = false;
+        StringBuilder builder = new StringBuilder();
+        for (String line : lines) {
+            String trimmedLine = StringUtils.trim(line);
+            if (inComment && StringUtils.startsWith(trimmedLine, "*/")) {
+                inComment = false;
+            }
+            if (inComment) {
+                String commentLine = trimmedLine;
+                if (commentLine.startsWith("*")) {
+                    commentLine = StringUtils.trim(StringUtils.substring(commentLine, 1));
+                }
+                builder.append(commentLine).append("\n");
+            } else if (StringUtils.startsWith(trimmedLine, targetPrefix)) {
+                inComment = true;
+            }
+        }
+        return StringUtils.trim(builder.toString());
     }
 
+    public String getStringComment(String documentText, String targetPrefix){
+        int index = documentText.indexOf(targetPrefix);
+        String textToCopy = "";
+        if (index != -1) {
+            int lineStart = documentText.lastIndexOf('\n', index) + 1;
+            int lineEnd = documentText.indexOf('\n', index);
+            if (lineEnd == -1) {
+                lineEnd = documentText.length();
+            }
+            textToCopy = documentText.substring(lineStart, lineEnd);
+        }
+
+        final String content = textToCopy.replaceFirst(targetPrefix, "");
+
+        return content;
+    }
 
     public  Notification notification(
             String groupId,

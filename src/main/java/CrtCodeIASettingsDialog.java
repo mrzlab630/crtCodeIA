@@ -51,7 +51,7 @@ public class CrtCodeIASettingsDialog extends DialogWrapper {
         );
         JPanel tokenLine = newLine(
                 urlLine,
-                "Token:",
+                "API Key:",
                 tokenField
         );
         JPanel modelLine = newLine(
