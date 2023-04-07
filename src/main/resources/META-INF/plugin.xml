@@ -7,6 +7,10 @@
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
+This plugin is specifically designed to help you send questions to ChatGPT directly from your phpStorm editor.
+<br/>
+With its intuitive interface, you can easily compose and send your queries without ever having to leave your workspace.
+<br/>
 To get started, simply type:<br/>
 <p>
 "<b>//crtCodeIA {%Your question%}</b>"<br/>

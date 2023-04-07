@@ -2,7 +2,7 @@
     <component name="CrtCodeIASettingsState">
         <option name="url" value="https://api.openai.com/v1/chat/completions" />
         <option name="token" value="" />
-        <option name="model" value="gpt-3.5-turbo-0301" />
+        <option name="model" value="gpt-3.5" />
         <option name="role" value="you are a senior level programmer" />
     </component>
 </application-config>

@@ -23,6 +23,20 @@ You can also use the shortcut "control+shift+Q+S."
 
 ### the plugin ready to use in the "plugin" folder.
 
+
+### build
+
+```
+
+./gradlew buildPlugin
+
+```
+
 ## installation
 
 File --> Settings --> Plugins --> click on the gear --> install Plugin from the Disc --> select the file creatCodeIA-1.0.jar
+
+
+[Get from Marketplace](https://plugins.jetbrains.com/plugin/21431-creatcodeia)
+
+
